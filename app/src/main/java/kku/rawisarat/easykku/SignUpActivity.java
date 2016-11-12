@@ -1,6 +1,11 @@
 package kku.rawisarat.easykku;
 
 import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,7 +20,9 @@ public class SignUpActivity extends AppCompatActivity {
     private EditText nameEditText, phoneEditText, userEditText, passwordEditText;
     private ImageView imageView;
     private Button button;
-    private String nameString, phoneString, userString, passwordString;
+    private String nameString, phoneString, userString, passwordString, imagePathString, imageNameString;
+    private Uri uri;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +54,7 @@ public class SignUpActivity extends AppCompatActivity {
                     //Have Space
                     Log.d("12novV1", "Have Space");
                     MyAlert myAlert = new MyAlert(SignUpActivity.this, R.drawable.doremon48,
-                            "มีช่องว่าง","กรุณากรอกให้ครบทุกช่องค่ะ");
+                            "มีช่องว่าง", "กรุณากรอกให้ครบทุกช่องค่ะ");
                     myAlert.myDialog();
 
                 }
@@ -63,7 +70,7 @@ public class SignUpActivity extends AppCompatActivity {
 
                 Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
                 intent.setType("image/*"); //เปิดโปรแกรมที่สามารถดูรูปได้
-                startActivityForResult(Intent.createChooser(intent,"โปรดเลือกแอพลิเคชั่นเพื่อดูภาพ"),0);
+                startActivityForResult(Intent.createChooser(intent, "โปรดเลือกแอพลิเคชั่นเพื่อดูภาพ"), 0);
 
             }//onClick
         });
@@ -78,11 +85,45 @@ public class SignUpActivity extends AppCompatActivity {
 
         if ((requestCode == 0) && (resultCode == RESULT_OK)) {
 
-            Log.d("12novV1","Result OK");
+            Log.d("12novV1", "Result OK");
+
+            //Show Image
+            uri = data.getData();
+            try {
+
+                Bitmap bitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(uri));
+                imageView.setImageBitmap(bitmap);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            //Find Path of Image
+            imagePathString = myFindPath(uri);
+            Log.d("12novV1","imagePath ==>" + imagePathString);
 
         } // if
 
     }// onActivity
+
+    private String myFindPath(Uri uri) {
+
+        String result = null;
+        String[] strings = {MediaStore.Images.Media.DATA};
+        Cursor cursor = getContentResolver().query(uri,strings,null,null,null);
+
+        if (cursor != null) {
+            cursor.moveToFirst();;
+            int index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+            result = cursor.getString(index);
+
+        } else {
+            result = uri.getPath();
+        }
+
+        return result;
+    }
+
 }// Main class
 
 
