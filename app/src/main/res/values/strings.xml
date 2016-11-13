@@ -3,5 +3,11 @@
 
     <string name="SignUp">สมัครสมาชิก</string>
 
+    <string name="title_HaveSpace">มีช่องว่าง</string>
+    <string name="message_HaveSpace">กรุณากรอกทุกช่องค่ะ</string>
+    <string name="title_UserFalse">User ผิด</string>
+    <string name="message_UserFalse">ไม่มี User นี้ในฐานข้อมูล !!!</string>
+    <string name="title_PasswordFalse">Password ผิด</string>
+    <string name="message_PasswordFalse">ลองพิมพ์ใหม่ Password ผิดนะ</string>
 
 </resources>
